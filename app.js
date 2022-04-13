@@ -5,8 +5,7 @@ const todoButton = document.querySelector(".todo-button");
 const todoList = document.querySelector(".todo-list");
 const filterOption = document.querySelector(".filter-todo");
 const todoContainer = document.querySelector(".todo-container");
-const clearButton = document.querySelector(".clear-btn")
-console.log(clearButton);
+const clearButton = document.createElement("button");
 
 
 // Event Listeners
@@ -14,11 +13,8 @@ document.addEventListener("DOMContentLoaded", getTodos);
 todoButton.addEventListener("click", addTodo);
 todoList.addEventListener("click", deleteCheck);
 filterOption.addEventListener("click", filterTodo);
-// clearButton.addEventListener("click", clearAll);
-
-
-
-
+clearButton.addEventListener("click", clearAll);
+document.addEventListener("DOMContentLoaded", checkTodos)
 
 
 // Functions
@@ -52,14 +48,12 @@ function addTodo(e) {
         // Clear
         todoInput.value = "";
     }
-
-
-
 }
+
 
 function deleteCheck(e) {
     const item = e.target;
-    const todo = item.parentElement;
+    todo = item.parentElement;
     // DELETE
     if (item.classList[0] === "delete-btn") {
         todo.classList.add("remove");
@@ -71,7 +65,7 @@ function deleteCheck(e) {
     const table = JSON.parse(localStorage.getItem("todos"));
     if (table.length === 0) {
         const clearButton = document.querySelector(".clear-btn");
-        console.log(clearButton)
+        clearButton.classList.add("remove");
         clearButton.remove();
     }
     // CHECK
@@ -80,6 +74,7 @@ function deleteCheck(e) {
     }
 
 }
+
 
 function filterTodo(e) {
     const todos = todoList.childNodes;
@@ -103,8 +98,8 @@ function filterTodo(e) {
                 }
         }
     });
-
 }
+
 
 function saveLocalTodos(todo) {
     let todos;
@@ -116,15 +111,12 @@ function saveLocalTodos(todo) {
     todos.push(todo);
     localStorage.setItem("todos", JSON.stringify(todos));
     if (todos.length === 1) {
-        const clearButton = document.createElement("button");
         clearButton.innerText = ("Clear All");
         clearButton.classList.add("clear-btn");
         todoContainer.appendChild(clearButton);
     } else if (todos.length === 0) {
-
         clearButton.remove();
     }
-
 }
 
 
@@ -159,6 +151,7 @@ function getTodos() {
     })
 }
 
+
 function removeLocalTodos(todo) {
     let todos;
     if (localStorage.getItem("todos") === null) {
@@ -171,7 +164,18 @@ function removeLocalTodos(todo) {
     localStorage.setItem("todos", JSON.stringify(todos));
 }
 
+
+function checkTodos() {
+    if (localStorage.getItem("todos") !== "[]") {
+        clearButton.innerText = ("Clear All");
+        clearButton.classList.add("clear-btn");
+        todoContainer.appendChild(clearButton);
+    }
+}
+
+
 function clearAll() {
-    todoList.remove();
-    Storage.clear();
+    localStorage.setItem("todos", "[]");
+    todoList.innerHTML = "";
+    clearButton.remove();
 }
